@@ -9,6 +9,9 @@ export class Gallery extends Component {
     page: 1,
     images: [],
     isLoading: false,
+    isEmpty: false,
+    isVisible: false,
+    error: null,
   };
 
   componentDidUpdate(_, prevState) {
@@ -22,10 +25,24 @@ export class Gallery extends Component {
     if (!query) return;
     this.setState({ isLoading: true });
     try {
-      const data = await ImageService.getImages(query, page);
-      console.log(data);
-    } catch {
-    } finally {
+      const { photos, total_results, per_page, page: currentPage } = await ImageService.getImages(query, page);
+      if (photos.length === 0) {
+        this.setState({
+        isEmpty: true
+        })
+      }
+      this.setState(prevState => ({
+        images: [...prevState.images, ...photos],
+        isVisible: currentPage < Math.ceil(total_results / per_page)
+      }))
+    } catch (error) { 
+      this.setState({
+        error: error.message
+      })
+    } finally { 
+      this.setState({
+        isLoading: false
+      })
     }
   };
 
