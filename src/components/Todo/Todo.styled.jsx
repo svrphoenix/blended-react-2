@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { InputSearch } from 'components/SearchForm/SearchForm.styled';
 
 export const TodoWrapper = styled.div`
   padding: ${({ theme }) => theme.spacing(10)};
@@ -41,3 +42,5 @@ export const EditButton = styled.button`
     transform: scale(1.05);
   }
 `;
+
+export const EditInput = styled(InputSearch)``;

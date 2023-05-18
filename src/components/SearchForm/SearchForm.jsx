@@ -7,6 +7,7 @@ export class SearchForm extends Component {
   state = {
     query: '',
   };
+  
   handleInput = evt => {
     this.setState({ query: evt.currentTarget.value.toLowerCase().trim() });
   };

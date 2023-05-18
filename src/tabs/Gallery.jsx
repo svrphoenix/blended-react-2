@@ -25,70 +25,74 @@ export class Gallery extends Component {
     if (!query) return;
     this.setState({ isLoading: true });
     try {
-      const { photos, total_results, per_page, page: currentPage } = await ImageService.getImages(query, page);
+      const {
+        photos,
+        total_results,
+        per_page,
+        page: currentPage,
+      } = await ImageService.getImages(query, page);
       if (photos.length === 0) {
         this.setState({
-        isEmpty: true
-        })
+          isEmpty: true,
+        });
       }
       this.setState(prevState => ({
         images: [...prevState.images, ...photos],
-        isVisible: currentPage < Math.ceil(total_results / per_page)
-      }))
-    } catch (error) { 
+        isVisible: currentPage < Math.ceil(total_results / per_page),
+      }));
+    } catch (error) {
       this.setState({
-        error: error.message
-      })
-    } finally { 
+        error: error.message,
+      });
+    } finally {
       this.setState({
-        isLoading: false
-      })
+        isLoading: false,
+      });
     }
   };
 
   onHandleSubmit = value => {
-    this.setState({ query: value , page: 1, images: [], error: null, isEmpty: false});
+    this.setState({
+      query: value,
+      page: 1,
+      images: [],
+      error: null,
+      isEmpty: false,
+    });
   };
 
   onLoadMore = () => {
-    this.setState(prevState => ({page: prevState.page + 1}))
-  }
+    this.setState(prevState => ({ page: prevState.page + 1 }));
+  };
 
   render() {
-    const { images, error, isLoading, isEmpty, isVisible} = this.state;
+    const { images, error, isLoading, isEmpty, isVisible } = this.state;
     return (
       <>
-         <SearchForm onSubmit={this.onHandleSubmit} />
+        <SearchForm onSubmit={this.onHandleSubmit} />
 
-         {isEmpty && 
-         <Text textAlign="center">Sorry. There are no images ... 😭</Text>
-         }
-         {error && 
-         <Text textAlign="center">❌ Something went wrong - {error}</Text>
-         }
-         
-         <Grid>
-          {images.length > 0 && 
-          images.map(({ id, src:{large}, avg_color, alt  }) => (
-            <GridItem  key={id}>
-              <CardItem color={avg_color}>
-                <img src={large} alt={alt}/>
-              </CardItem>
-            </GridItem>
-          ))
+        {isEmpty && (
+          <Text textAlign="center">Sorry. There are no images ... 😭</Text>
+        )}
+        {error && (
+          <Text textAlign="center">❌ Something went wrong - {error}</Text>
+        )}
 
-
-          }
-         </Grid>
-         {isVisible && 
-         <Button onClick={this.onLoadMore} disabled={isLoading}>
-          {isLoading ? "Loading..." : "Load more"}
+        <Grid>
+          {images.length > 0 &&
+            images.map(({ id, src: { large }, avg_color, alt }) => (
+              <GridItem key={id}>
+                <CardItem color={avg_color}>
+                  <img src={large} alt={alt} />
+                </CardItem>
+              </GridItem>
+            ))}
+        </Grid>
+        {isVisible && (
+          <Button onClick={this.onLoadMore} disabled={isLoading}>
+            {isLoading ? 'Loading...' : 'Load more'}
           </Button>
-         }
-
-         
-        
-        
+        )}
       </>
     );
   }
