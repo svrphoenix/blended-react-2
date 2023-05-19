@@ -43,7 +43,7 @@ export class Todos extends Component {
     this.setState(({ todos }) => ({
       todos: todos.map(todo => {
         if (todo.id === id) {
-          todo.text = value;
+          return { ...todo, text: value };
         }
         return todo;
       }),
